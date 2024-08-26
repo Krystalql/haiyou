@@ -1,0 +1,5 @@
+DATABASE: dqjc_zj_business_4_8
+HOST: 127.0.0.1
+PASSWORD: '123456'
+PORT: 3306
+USER: root

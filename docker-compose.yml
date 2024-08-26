@@ -1,0 +1,162 @@
+version: '3'
+services:
+  
+  # parse.add_argument("-t", "--time", type=int, default=0, help="time setting(min)")
+  # parse.add_argument("-i", "--host", type=str, default='47.108.220.99', help="host ip config")
+  # parse.add_argument("-d", "--database", type=str, default='dqjc_zj_business', help="name of database")
+  # parse.add_argument("-u", "--user", type=str, default='dqjc_swpu', help="user name")
+  # parse.add_argument("-w", "--password", type=str, default='swpu@123456', help="password")
+  # parse.add_argument("-p", "--port", type=int, default=23548, help="port")
+
+  # data cleaner module
+  andian-datacleaner:
+    build: ./andian_dataCleaner
+    image: andian-datacleaner:1.0.0
+    container_name: andian-datacleaner
+    deploy: 
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 500M
+    restart: always
+    environment:
+     - TZ=Asia/Shanghai
+    network_mode: host
+    command: -t 5 -i 192.168.0.118 -u root -d dqjc_zj_business -w pwd@123456 -p 23548
+    
+
+  # cause analysis module
+  andian-cause-trans:
+    build: ./cause-analysis/andian_cause_transformer
+    image: andian-cause-trans:1.0.0
+    container_name: andian-cause-trans
+    deploy: 
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 500M
+    restart: always
+    environment:
+     - TZ=Asia/Shanghai
+    network_mode: host
+    command: -t 30 -i 192.168.0.118 -u root -d dqjc_zj_business -w pwd@123456 -p 23548
+  andian-cause-gis:
+    build: ./cause-analysis/andian_cause_gis
+    image: andian-cause-gis:1.0.0
+    container_name: andian-cause-gis
+    deploy: 
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 500M
+    restart: always
+    environment:
+     - TZ=Asia/Shanghai
+    network_mode: host
+    command: -t 30 -i 192.168.0.118 -u root -d dqjc_zj_business -w pwd@123456 -p 23548
+  andian-cause-subcable:
+    build: ./cause-analysis/andian_cause_subcable
+    image: andian-cause-subcable:1.0.0
+    container_name: andian-cause-subcable
+    deploy: 
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 500M
+    restart: always
+    environment:
+     - TZ=Asia/Shanghai
+    network_mode: host
+    command: -t 30 -i 192.168.0.118 -u root -d dqjc_zj_business -w pwd@123456 -p 23548
+  
+  # benchmark analysis module
+  andian-benchmark-trans:
+    build: ./benchmark-analysis/andian_transformer_benchmarkEquip
+    image: andian-benchmark-trans:1.0.0
+    container_name: andian-benchmark-trans
+    deploy: 
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 500M
+    restart: always
+    environment:
+     - TZ=Asia/Shanghai
+    network_mode: host
+    command: -t 30 -i 192.168.0.118 -u root -d dqjc_zj_business -w pwd@123456 -p 23548
+  andian-benchmark-gis:
+    build: ./benchmark-analysis/andian_gis_benchmarkEquip
+    image: andian-benchmark-gis:1.0.0
+    container_name: andian-benchmark-gis
+    deploy: 
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 500M
+    restart: always
+    environment:
+     - TZ=Asia/Shanghai
+    network_mode: host
+    command: -t 30 -i 192.168.0.118 -u root -d dqjc_zj_business -w pwd@123456 -p 23548
+  andian-benchmark-subcable:
+    build: ./benchmark-analysis/andian_subcable_benchmark
+    image: andian-benchmark-subcable:1.0.0
+    container_name: andian-benchmark-subcable
+    deploy: 
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 500M
+    restart: always
+    environment:
+     - TZ=Asia/Shanghai
+    network_mode: host
+    command: -t 30 -i 192.168.0.118 -u root -d dqjc_zj_business -w pwd@123456 -p 23548
+  
+  # predict analysis module
+  andian-predict-gis:
+    build: ./predict-analysis/andianGIS_predict_V5
+    image: andian-predict-gis:1.0.0
+    container_name: andian-predict-gis
+    deploy: 
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 500M
+    restart: always
+    environment:
+     - TZ=Asia/Shanghai
+    network_mode: host
+    command: --interval 1800 -i 192.168.0.118 -u root -d dqjc_zj_business -w pwd@123456 -p 23548
+  andian-predict-subcable:
+    build: ./predict-analysis/andianSubcable_predict_V3
+    image: andian-predict-subcable:1.0.0
+    container_name: andian-predict-subcable
+    deploy: 
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 500M
+    restart: always
+    environment:
+     - TZ=Asia/Shanghai
+    network_mode: host
+    command: --interval 1800 -i 192.168.0.118 -u root -d dqjc_zj_business -w pwd@123456 -p 23548
+  andian-predict-trans:
+    build: ./predict-analysis/andianTF_predict_V2
+    image: andian-predict-trans:1.0.0
+    container_name: andian-predict-trans
+    deploy: 
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 500M
+    restart: always
+    environment:
+     - TZ=Asia/Shanghai
+    network_mode: host
+    command: --interval 1800 -i 192.168.0.118 -u root -d dqjc_zj_business -w pwd@123456 -p 23548
+
+# networks:
+#   default: 
+#     name: mysql8-network
